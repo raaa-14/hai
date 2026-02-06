@@ -19,6 +19,7 @@ body {
     text-align: center;
 }
 
+/* 🌌 Lampu konser */
 .light {
     position: absolute;
     width: 260px;
@@ -35,6 +36,7 @@ body {
     to   { transform: translate(70px, 70px); }
 }
 
+/* 💌 Card */
 .card {
     position: relative;
     background: rgba(0,0,0,0.65);
@@ -106,7 +108,7 @@ h1 {
 <div class="light" style="top:65%; left:70%"></div>
 
 <!-- 🎶 AUDIO -->
-<audio id="oasis" preload="auto">
+<audio id="oasis">
     <source src="standbyme.mp3" type="audio/mpeg">
 </audio>
 
@@ -125,20 +127,18 @@ h1 {
 </div>
 
 <script>
-/* 💌 Nama */
-document.getElementById("nama").innerText = "Opikkkk";
+/* 💌 Nama otomatis */
+const namaDia = "Opikkkk"; // GANTI NAMA
+document.getElementById("nama").innerText = namaDia;
 
 /* 🎶 Musik */
 const music = document.getElementById("oasis");
 music.volume = 0;
-let started = false;
 
-/* 🔊 Fade In */
+/* 🔊 Fade in */
 function fadeInMusic() {
-    if (started) return;
-    started = true;
-    music.play();
     let vol = 0;
+    music.play();
     const fade = setInterval(() => {
         if (vol < 0.7) {
             vol += 0.02;
@@ -149,7 +149,7 @@ function fadeInMusic() {
     }, 300);
 }
 
-/* 🔉 Fade Out */
+/* 🔉 Fade out */
 let fading = false;
 function fadeOutMusic() {
     if (fading) return;
@@ -166,17 +166,19 @@ function fadeOutMusic() {
     }, 300);
 }
 
-/* ⏳ Turun di 20 detik terakhir */
+/* ⏳ Fade out 20 detik terakhir */
 music.addEventListener("timeupdate", () => {
     if (music.duration && music.currentTime >= music.duration - 20) {
         fadeOutMusic();
     }
 });
 
-/* ▶️ WAJIB klik dulu (aturan browser) */
-document.addEventListener("click", fadeInMusic, { once: true });
+/* ▶️ Autoplay setelah tap */
+document.addEventListener("click", () => {
+    fadeInMusic();
+}, { once: true });
 
-/* ✨ Teks sinkron */
+/* ✨ Lirik sinkron */
 const lyricsBox = document.getElementById("lyrics");
 const lines = [
     { time: 3, text: "I know I made mistakes." },
@@ -206,7 +208,7 @@ function showLyrics() {
 }
 window.onload = showLyrics;
 
-/* 💕 WhatsApp */
+/* 💕 WhatsApp (emoji AMAN) */
 function maafin() {
     window.location.href =
     "https://api.whatsapp.com/send?phone=6287822132387&text=Aku%20maafin%20kamu%20%F0%9F%A4%8D%F0%9F%92%96";
