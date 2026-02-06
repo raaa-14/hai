@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stand By Me 🤍</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #1c1f2b, #000);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+}
+
+/* 🌌 Lampu konser */
+.light {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(255,215,150,0.35), transparent);
+    animation: move 8s infinite alternate ease-in-out;
+    mix-blend-mode: screen;
+}
+.light:nth-child(1){animation-duration:9s;}
+.light:nth-child(2){animation-duration:12s;}
+
+@keyframes move {
+    from { transform: translate(-70px, -70px); }
+    to   { transform: translate(70px, 70px); }
+}
+
+/* 💌 Card */
+.card {
+    position: relative;
+    background: rgba(0,0,0,0.65);
+    border-radius: 22px;
+    padding: 32px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 0 35px rgba(255,215,150,0.18);
+    animation: fadeIn 2s;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #ffd369;
+}
+
+#lyrics {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-top: 16px;
+    opacity: 0;
+    transition: opacity 1.6s ease;
+}
+
+.quote {
+    font-style: italic;
+    color: #ffd369;
+    margin-top: 18px;
+}
+
+.btn {
+    margin-top: 18px;
+    padding: 12px 26px;
+    border-radius: 30px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-love {
+    background: #ffd369;
+    color: #000;
+    margin-right: 10px;
+}
+
+.btn-sad {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #aaa;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="light" style="top:10%; left:15%"></div>
+<div class="light" style="top:65%; left:70%"></div>
+
+<!-- 🎶 AUDIO -->
+<audio id="oasis">
+    <source src="standbyme.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+    <h1>Hai <span id="nama"></span> 🤍</h1>
+    <h1>Maafin Aku Ya…</h1>
+
+    <div id="lyrics"></div>
+
+    <p class="quote">
+        “Stand by me, nobody knows the way it’s gonna be…”
+    </p>
+
+    <button class="btn btn-love" onclick="maafin()">💕 Maafin</button>
+    <button class="btn btn-sad" onclick="tidakMaafin()">💔 Tidak Maafin</button>
+</div>
+
+<script>
+/* 💌 Nama otomatis */
+const namaDia = "Opikkkk"; // GANTI NAMA
+document.getElementById("nama").innerText = namaDia;
+
+/* 🎶 Musik */
+const music = document.getElementById("oasis");
+music.volume = 0;
+
+/* 🔊 Fade in */
+function fadeInMusic() {
+    let vol = 0;
+    music.play();
+    const fade = setInterval(() => {
+        if (vol < 0.7) {
+            vol += 0.02;
+            music.volume = vol;
+        } else {
+            clearInterval(fade);
+        }
+    }, 300);
+}
+
+/* 🔉 Fade out */
+let fading = false;
+function fadeOutMusic() {
+    if (fading) return;
+    fading = true;
+    let vol = music.volume;
+    const fade = setInterval(() => {
+        if (vol > 0.02) {
+            vol -= 0.02;
+            music.volume = vol;
+        } else {
+            clearInterval(fade);
+            music.pause();
+        }
+    }, 300);
+}
+
+/* ⏳ Fade out 20 detik terakhir */
+music.addEventListener("timeupdate", () => {
+    if (music.duration && music.currentTime >= music.duration - 20) {
+        fadeOutMusic();
+    }
+});
+
+/* ▶️ Autoplay setelah tap */
+document.addEventListener("click", () => {
+    fadeInMusic();
+}, { once: true });
+
+/* ✨ Lirik sinkron */
+const lyricsBox = document.getElementById("lyrics");
+const lines = [
+    { time: 3, text: "I know I made mistakes." },
+    { time: 10, text: "Some words stayed longer than they should." },
+    { time: 18, text: "And I’m truly sorry." },
+    { time: 26, text: "When everything feels heavy," },
+    { time: 34, text: "I just want to be the one who stays." },
+    { time: 44, text: "Not the reason you’re hurting." },
+    { time: 56, text: "Aku nggak sempurna," },
+    { time: 64, text: "tapi perasaanku tulus." },
+    { time: 74, text: "Stand by me 🤍" }
+];
+
+let i = 0;
+function showLyrics() {
+    if (i < lines.length) {
+        setTimeout(() => {
+            lyricsBox.style.opacity = 0;
+            setTimeout(() => {
+                lyricsBox.innerText = lines[i].text;
+                lyricsBox.style.opacity = 1;
+                i++;
+                showLyrics();
+            }, 1200);
+        }, (i === 0 ? lines[0].time : lines[i].time - lines[i-1].time) * 1000);
+    }
+}
+window.onload = showLyrics;
+
+/* 💕 WhatsApp (emoji AMAN) */
+function maafin() {
+    window.location.href =
+    "https://api.whatsapp.com/send?phone=6287822132387&text=Aku%20maafin%20kamu%20%F0%9F%A4%8D%F0%9F%92%96";
+}
+
+function tidakMaafin() {
+    alert("Aku sedih… tapi aku tetap di sini 🤍");
+}
+</script>
+
+</body>
+</html>
